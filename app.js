@@ -8,6 +8,7 @@ mongoose
   .connect(MONGOURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then(() => {
     console.log("connected to mongo databsae");
