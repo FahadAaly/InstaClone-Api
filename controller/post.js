@@ -108,12 +108,41 @@ module.exports = {
             {
                 new: true,
             }
-        ).populate("comments.postedBy", "_id name");
+        )
+            .populate("postedBy", "_id name")
+            .populate("comments.postedBy", "_id name");
         try {
             res.send({
                 message: "Successfully comment",
                 status: "SUCCESS",
                 data: postComment,
+            });
+        } catch (error) {
+            res.send(error);
+        }
+    },
+
+    DeleteComment: async (req, res) => {
+        const post = await Post.findByIdAndUpdate(
+            req.params.postId,
+            {
+                $pull: { comments: { _id: req.params.commentId } },
+            },
+            {
+                new: true,
+            }
+        )
+            .populate("postedBy", "_id name")
+            .populate("comments.postedBy", "_id name");
+
+        if (!post) {
+            return res.status(422).json({ message: "Post not found" });
+        }
+        try {
+            res.send({
+                message: "Comment deleted successfully",
+                status: "SUCCESS",
+                data: post,
             });
         } catch (error) {
             res.send(error);
@@ -131,7 +160,7 @@ module.exports = {
             await post.remove();
         }
         try {
-            res.send({ message: "Successfully deleted", body: post });
+            res.send({ message: "Successfully deleted", data: post });
         } catch (error) {
             res.send(error);
         }
