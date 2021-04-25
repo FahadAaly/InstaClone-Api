@@ -5,25 +5,22 @@ const { MONGOURI } = require("./keys");
 const port = 5000;
 
 mongoose
-  .connect(MONGOURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
-  .then(() => {
-    console.log("connected to mongo databsae");
-  })
-  .catch((err) => console.log(err));
+    .connect(MONGOURI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+    })
+    .then(() => {
+        console.log("connected to mongo databsae");
+    })
+    .catch((err) => console.log(err));
 
 require("./models/user");
 require("./models/post");
 
-const authRouter = require("./routes/auth");
-const postRoute = require("./routes/post");
-
 app.use(express.json());
-app.use(authRouter, postRoute);
+app.use(require("./routes"));
 
 app.listen(port, () => {
-  console.log("Server is listen on port", port);
+    console.log("Server is listen on port", port);
 });
